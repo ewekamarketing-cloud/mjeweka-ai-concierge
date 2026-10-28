@@ -1,3 +1,5 @@
+import { useState } from 'react';
+
 const navItems = ['Home', 'About', 'Services', 'Contact'];
 
 const features = [
@@ -25,7 +27,44 @@ const serviceCards = [
   'Appointment Scheduling',
 ];
 
+const serviceOptions = [
+  'AI Concierge Setup',
+  'Customer Support Automation',
+  'Lead Qualification',
+  'Custom Chatbot Strategy',
+  'Website Concierge Integration',
+];
+
 function App() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    service: serviceOptions[0],
+    date: '',
+    message: '',
+  });
+  const [submitted, setSubmitted] = useState(false);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSubmitted(true);
+    setFormData({
+      name: '',
+      email: '',
+      service: serviceOptions[0],
+      date: '',
+      message: '',
+    });
+  };
+
   return (
     <div className="page-shell">
       <header className="topbar">
@@ -123,12 +162,96 @@ function App() {
         </section>
 
         <section id="contact" className="content-section cta-section">
-          <div className="cta-box">
-            <div>
-              <span className="eyebrow">Contact</span>
-              <h2>Ready to bring AI concierge experiences to your brand?</h2>
+          <div className="contact-grid">
+            <div className="cta-box">
+              <div>
+                <span className="eyebrow">Contact</span>
+                <h2>Ready to bring AI concierge experiences to your brand?</h2>
+              </div>
+              <button className="primary-button">Talk to Us</button>
             </div>
-            <button className="primary-button">Talk to Us</button>
+
+            <form className="booking-form" onSubmit={handleSubmit}>
+              <div className="form-header">
+                <span className="eyebrow">Book a discovery call</span>
+                <h3>Tell us what you need.</h3>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Full name
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Your full name"
+                    required
+                  />
+                </label>
+              </div>
+
+              <div className="form-row two-column">
+                <label>
+                  Email
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="you@example.com"
+                    required
+                  />
+                </label>
+
+                <label>
+                  Preferred date
+                  <input
+                    type="date"
+                    name="date"
+                    value={formData.date}
+                    onChange={handleChange}
+                  />
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Service interest
+                  <select name="service" value={formData.service} onChange={handleChange}>
+                    {serviceOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <div className="form-row">
+                <label>
+                  Project details
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder="Tell us about your project, goals, or questions..."
+                    rows="5"
+                    required
+                  />
+                </label>
+              </div>
+
+              <button type="submit" className="primary-button submit-button">
+                Request a Call
+              </button>
+
+              {submitted && (
+                <p className="success-message" aria-live="polite">
+                  Thanks! Your discovery request has been received. We’ll be in touch soon.
+                </p>
+              )}
+            </form>
           </div>
         </section>
       </main>
